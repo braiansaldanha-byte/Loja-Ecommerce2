@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>TechStore - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <span class="material-symbols-outlined">terminal</span>
+                TechStore
+            </div>
+            <ul class="nav-menu">
+                <li>
+                    <a class="nav-link" href="#home">
+                        <span class="material-symbols-outlined">home</span>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="#products">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        Produtos
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="#about">
+                        <span class="material-symbols-outlined">info</span>
+                        Sobre
+                    </a>
+                </li>
+                <li>
+                    <div class="cart-icon" onclick="toggleCart()">
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="promo-slider" id="home">
+        <div class="slide-container" id="slide-container">
+            <div class="slide" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);">
+                <div class="slide-content">
+                    <div class="image-placeholder">
+                        <h2>🚀 Mega Ofertas Tech</h2>
+                        <p>Até 50% OFF em notebooks e smartphones selecionados. Não perca!</p>
+                        <button class="slide-btn" onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">Ver Ofertas</button>
+                    </div>
+                </div>
+            </div>
+            <div class="slide" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+                <div class="slide-content">
+                    <div class="slide-text">
+                        <h2>💻 Frete Grátis</h2>
+                        <p>Em compras acima de R$ 500. Entrega rápida e segura em todo Brasil.</p>
+                        <button class="slide-btn" onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">Comprar Agora</button>
+                    </div>
+                </div>
+            </div>
+            <div class="slide" style="background: linear-gradient(135deg, #134e4a 0%, #0f766e 100%);">
+                <div class="slide-content">
+                    <div class="slide-text">
+                        <h2>🎯 Lançamentos 2025</h2>
+                        <p>Os produtos mais inovadores do mercado. Seja o primeiro a ter!</p>
+                        <button class="slide-btn" onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">Conhecer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-dots" id="slide-dots"></div>
+    </div>
+
+    <div class="container">
+        <div class="search-section">
+            <div class="search-bar">
+                <span class="material-symbols-outlined">search</span>
+                <input type="text" id="search-input" placeholder="Buscar produtos...">
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="laptops">Laptops</button>
+                <button class="filter-btn" data-filter="smartphones">Smartphones</button>
+            </div>
+        </div>
+
+        <div class="location-map-section">
+            <div class="location-map-header">
+                <h2>📍 Sua Localização</h2>
+                <p id="user-location-text">Carregando sua localização...</p>
+            </div>
+            <div id="map" class="map-container"></div>
+        </div>
+
+        <div class="shipping-banner">
+            <div class="shipping-content">
+                <span class="material-symbols-outlined shipping-icon">local_shipping</span>
+                <div class="shipping-text">
+                    <h3>🚚 Frete Grátis Disponível!</h3>
+                    <p>Aproveite frete grátis em compras acima de <strong>R$ 500,00</strong> para sua região.</p>
+                </div>
+                <span class="material-symbols-outlined shipping-close" onclick="this.parentElement.parentElement.style.display='none';">close</span>
+            </div>
+        </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="total-products">30</div>
+                        <div class="stat-label">Total de Produtos</div>
+                    </div>
+                    <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                        <span class="material-symbols-outlined">inventory</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="total-stock">600</div>
+                        <div class="stat-label">Itens em Estoque</div>
+                    </div>
+                    <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                        <span class="material-symbols-outlined">package</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="avg-price">R$ 499,99</div>
+                        <div class="stat-label">Preço Médio</div>
+                    </div>
+                    <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                        <span class="material-symbols-outlined">payments</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="categories">2</div>
+                        <div class="stat-label">Categorias</div>
+                    </div>
+                    <div class="stat-icon" style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">
+                        <span class="material-symbols-outlined">category</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="products">
+            <div class="products-header">
+                <h2>📦 Produtos Disponíveis</h2>
+            </div>
+            <div class="products-grid" id="products-grid"></div>
+        </div>
+
+        <div class="about-page" id="about">
+            <h1>🏪 Sobre a TechStore</h1>
+            <p>
+                A <strong>TechStore</strong> é a sua loja de tecnologia de confiança, oferecendo os melhores produtos do mercado desde 2020. Nossa missão é democratizar o acesso à tecnologia de ponta, proporcionando produtos de qualidade com os melhores preços e condições de pagamento.
+            </p>
+            <p>
+                Com um catálogo diversificado que inclui notebooks de última geração, smartphones top de linha e acessórios tecnológicos, atendemos tanto entusiastas de tecnologia quanto profissionais que buscam equipamentos de alto desempenho.
+            </p>
+            <p>
+                Nosso compromisso vai além da venda: oferecemos suporte técnico especializado, garantia estendida e uma experiência de compra segura e satisfatória. Acreditamos que a tecnologia deve ser acessível a todos, e trabalhamos diariamente para tornar isso realidade.
+            </p>
+            
+            <div class="about-features">
+                <div class="feature-item">
+                    <span class="material-symbols-outlined">verified</span>
+                    <h3>Produtos Originais</h3>
+                    <p>100% autênticos e com garantia</p>
+                </div>
+                <div class="feature-item">
+                    <span class="material-symbols-outlined">local_shipping</span>
+                    <h3>Entrega Rápida</h3>
+                    <p>Para todo o Brasil</p>
+                </div>
+                <div class="feature-item">
+                    <span class="material-symbols-outlined">support_agent</span>
+                    <h3>Suporte 24/7</h3>
+                    <p>Sempre à disposição</p>
+                </div>
+                <div class="feature-item">
+                    <span class="material-symbols-outlined">lock</span>
+                    <h3>Compra Segura</h3>
+                    <p>Pagamento protegido</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('cart-modal')">×</button>
+            <h2>🛒 Meu Carrinho</h2>
+            <div id="cart-items"></div>
+            <div class="cart-total" id="cart-total"></div>
+            <button class="btn-checkout" onclick="checkoutCart()">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <div class="modal" id="purchase-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('purchase-modal')">×</button>
+            <h2>💳 Finalizar Compra</h2>
+            <div id="purchase-details"></div>
+            <div style="text-align: center; padding: 2rem; background: rgba(59, 130, 246, 0.05); border-radius: 12px; margin: 1rem 0;">
+                <div id="qrcode"></div>
+            </div>
+            <div style="text-align: center; color: #94a3b8; margin-top: 1rem;">
+                <p><strong>Escaneie o QR Code para pagar via Pix</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="logo">
+                <span class="material-symbols-outlined">terminal</span>
+                TechStore
+            </div>
+            <p>© 2025 TechStore - Sua loja de tecnologia de confiança</p>
+            <p>Desenvolvido por BR@1@N</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
